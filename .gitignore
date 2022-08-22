@@ -1,0 +1,12 @@
+build/
+cmake-build*/
+
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
