@@ -1,0 +1,466 @@
+<node>
+	<klass name = "mh_player" parent = "g_object" parent_header = "glib-object.h">
+		<method name = "open"/>
+		<method name = "set_source_by_name">
+			<arg name = "name" direction = "in" type = "p"/>
+		</method>
+		<method name = "set_video_sink">
+			<arg name = "name" direction = "in" type = "p"/>
+		</method>
+		<method name = "set_audio_sink">
+			<arg name = "name" direction = "in" type = "p"/>
+		</method>
+		<method name = "set_audio_track">
+			<arg name = "track" direction = "in" type = "u"/>
+		</method>
+		<method name = "set_subtitle">
+			<arg name = "subtitle" direction = "in" type = "u"/>
+		</method>
+		<method name = "resize">
+			<arg name = "x" direction = "in" type = "u"/>
+			<arg name = "y" direction = "in" type = "u"/>
+			<arg name = "width" direction = "in" type = "u"/>
+			<arg name = "height" direction = "in" type = "u"/>
+		</method>
+		<method name = "seek">
+			<arg name = "position" direction = "in" type = "u"/>
+		</method>
+		<method name = "play"/>
+		<method name = "pause"/>
+		<method name = "stop"/>
+		<method name = "close"/>
+		<method name = "set_media_location">
+			<arg name = "location" direction = "in" type = "s"/>
+		</method>
+		<method name = "set_volume">
+			<arg name = "volume" direction = "in" type = "d"/>
+		</method>
+		<method name = "mute"/>
+		<method name = "rotate">
+			<arg name = "value" direction = "out" type = "u"/>
+		</method>
+		<method name = "set_playback_rate">
+			<arg name = "rate" direction = "in" type = "d"/>
+		</method>
+
+		<signal	name = "player_event">
+			<arg name = "type" type = "u"/>
+		</signal>
+	</klass>
+	<klass name = "mh_contents" parent = "g_object" parent_header = "glib-object.h">
+		<method name = "instance"/>
+		<method name = "add_device"/>
+		<method name = "add_node"/>
+		<method name = "add_closure"/>
+		<method name = "add_song"/>
+		<method name = "add_film"/>
+		<method name = "add_image"/>
+		<method name = "begin_transaction"/>
+		<method name = "commit_transaction"/>
+		<method name = "rollback_transaction"/>
+		<method name = "prepare"/>
+		<method name = "step"/>
+		<method name = "release"/>
+	</klass>
+	
+	<klass name = "mh_col" parent="g_object" parent_header="glib-object.h">
+		<method name = "create">
+			<arg name = "device" direction = "in" type = "p"/>
+		</method>
+		<method name = "filter">
+			<arg name = "cond" direction = "in" type = "p"/>
+			<arg name = "count" direction = "in" type = "u"/>
+		</method>
+		<method name = "count">
+		</method>
+		<method name = "retrieve">
+			<arg name = "index" direction = "in" type = "u"/>
+			<arg name = "count" direction = "in" type = "u"/>
+			<arg name = "result" direction = "out" type = "p"/>
+			<arg name = "rcount" direction = "out" type = "u"/>
+		</method>
+
+		<method name = "unref">
+		</method>
+
+		<signal name = "changed"/>
+	</klass>
+
+	<klass name = "mh_folder" parent = "g_object" parent_header = "glib-object.h">
+		<method name = "create">
+			<arg name = "device" direction = "in" type = "p"/>
+		</method>
+
+		<method name = "root"/>
+		<method name = "next"/>
+		<method name = "previous"/>
+		<method name = "children"/>
+		<method name = "parent"/>
+	</klass>
+
+	<klass name = "mh_item" parent="g_object" parent_header="glib-object.h">
+		<method name = "retrieve_detail"/>
+	</klass>
+
+	<klass name = "mh_core" parent = "mh_io" parent_header = "mh_io.h">
+		<event name = "register_listener">
+			<arg name = "listener" direction = "in" type = "p"/>
+		</event>
+		<event name = "start"/>
+		<method name = "set_plugins_path"/>
+	</klass>
+
+	<klass name = "mh_dev" parent="mh_io" parent_header="mh_io.h">
+		<io name = "play_items">
+			<arg name = "items" direction = "in" type = "p"/>
+			<arg name = "index" direction = "in" type = "u"/>
+		</io>
+		<method name = "stop">
+		</method>
+		<method name = "play">
+		</method>
+		<method name = "pause">
+		</method>
+		<method name = "play_pause">
+		</method>
+		<method name = "resume">
+		</method>
+		<method name = "forward">
+		</method>
+		<method name = "forward_done">
+		</method>
+		<method name = "backward">
+		</method>
+		<method name = "backward_done">
+		</method>
+		<method name = "set_index">
+		</method>
+		<method name = "set_speed">
+			<arg name = "speed" direction = "in" type = "u"/>
+		</method>
+		<method name = "set_repeat">
+		</method>
+		<method name = "set_shuffle">
+		</method>
+		<method name = "set_buffer_time">
+		</method>
+
+		<event name = "start_sync">
+			<arg name = "dev" direction = "in" type = "p"/>
+		</event>
+
+		<signal name = "start"/>
+		<signal name = "update"/>
+		<signal name = "finish"/>
+	</klass>
+
+	<klass name = "mh_storage" parent="mh_dev" parent_header="mh_dev.h">
+		<method name = "play_items" override = "mh_dev">
+			<arg name = "items" direction = "in" type = "p"/>
+			<arg name = "index" direction = "in" type = "u"/>
+		</method>
+		<method name = "stop" override = "mh_dev">
+		</method>
+		<method name = "play" override = "mh_dev">
+		</method>
+		<method name = "pause" override = "mh_dev">
+		</method>
+		<method name = "play_pause" override = "mh_dev">
+		</method>
+		<method name = "resume" override = "mh_dev">
+		</method>
+		<method name = "forward" override = "mh_dev">
+		</method>
+		<method name = "forward_done" override = "mh_dev">
+		</method>
+		<method name = "backward" override = "mh_dev">
+		</method>
+		<method name = "backward_done" override = "mh_dev">
+		</method>
+		<method name = "set_index" override = "mh_dev">
+		</method>
+		<method name = "set_speed" override = "mh_dev">
+			<arg name = "speed" direction = "in" type = "u"/>
+		</method>
+		<method name = "set_repeat" override = "mh_dev">
+		</method>
+		<method name = "set_shuffle" override = "mh_dev">
+		</method>
+		<method name = "set_buffer_time" override = "mh_dev">
+		</method>
+
+		<signal name = "storage"/>
+	</klass>
+
+	<klass name = "mh_dev_iap2" parent="mh_dev" parent_header="mh_dev.h">
+		<method name = "stop" override = "mh_dev">
+		</method>
+		<method name = "play" override = "mh_dev">
+		</method>
+		<method name = "pause" override = "mh_dev">
+		</method>
+		<method name = "play_pause" override = "mh_dev">
+		</method>
+		<method name = "resume" override = "mh_dev">
+		</method>
+		<method name = "forward" override = "mh_dev">
+		</method>
+		<method name = "forward_done" override = "mh_dev">
+		</method>
+		<method name = "backward" override = "mh_dev">
+		</method>
+		<method name = "backward_done" override = "mh_dev">
+		</method>
+		<method name = "set_index" override = "mh_dev">
+		</method>
+		<method name = "set_speed" override = "mh_dev">
+			<arg name = "speed" direction = "in" type = "u"/>
+		</method>
+		<method name = "set_repeat" override = "mh_dev">
+		</method>
+		<method name = "set_shuffle" override = "mh_dev">
+		</method>
+		<method name = "set_buffer_time" override = "mh_dev">
+		</method>
+	</klass>
+
+	<klass name = "mh_dev_mtp" parent="mh_dev" parent_header="mh_dev.h">
+		<method name = "stop" override = "mh_dev">
+		</method>
+		<method name = "play" override = "mh_dev">
+		</method>
+		<method name = "pause" override = "mh_dev">
+		</method>
+		<method name = "play_pause" override = "mh_dev">
+		</method>
+		<method name = "resume" override = "mh_dev">
+		</method>
+		<method name = "forward" override = "mh_dev">
+		</method>
+		<method name = "forward_done" override = "mh_dev">
+		</method>
+		<method name = "backward" override = "mh_dev">
+		</method>
+		<method name = "backward_done" override = "mh_dev">
+		</method>
+		<method name = "set_index" override = "mh_dev">
+		</method>
+		<method name = "set_speed" override = "mh_dev">
+			<arg name = "speed" direction = "in" type = "u"/>
+		</method>
+		<method name = "set_repeat" override = "mh_dev">
+		</method>
+		<method name = "set_shuffle" override = "mh_dev">
+		</method>
+		<method name = "set_buffer_time" override = "mh_dev">
+		</method>
+	</klass>
+
+	<klass name = "mh_dev_carplay" parent="mh_dev" parent_header="mh_dev.h">
+		<io name = "changed_modes">
+		</io>
+		<io name = "force_key_frame">
+		</io>
+		<io name = "request_siri">
+			<arg name = "siriAction" direction = "in" type = "u"/>
+		</io>
+		<io name = "request_ui_a">
+			<arg name = "url" direction = "in" type = "s"/>
+		</io>
+		<io name = "set_night_mode">
+			<arg name = "nightMode" direction = "in" type = "u"/>
+		</io>
+		<io name = "set_limit_ui">
+			<arg name = "limitUI" direction = "in" type = "u"/>
+		</io>
+	</klass>
+
+	<klass name = "mh_mixed" parent="mh_dev" parent_header="mh_dev.h">
+		<method name = "play_items" override = "mh_dev">
+			<arg name = "items" direction = "in" type = "p"/>
+			<arg name = "index" direction = "in" type = "u"/>
+		</method>
+		<method name = "stop" override = "mh_dev">
+		</method>
+		<method name = "play" override = "mh_dev">
+		</method>
+		<method name = "pause" override = "mh_dev">
+		</method>
+		<method name = "play_pause" override = "mh_dev">
+		</method>
+		<method name = "resume" override = "mh_dev">
+		</method>
+		<method name = "set_position" override = "mh_dev">
+			<arg name = "second" direction = "in" type = "u"/>
+		</method>
+		<method name = "forward" override = "mh_dev">
+		</method>
+		<method name = "forward_done" override = "mh_dev">
+		</method>
+		<method name = "backward" override = "mh_dev">
+		</method>
+		<method name = "backward_done" override = "mh_dev">
+		</method>
+		<method name = "set_index" override = "mh_dev">
+		</method>
+		<method name = "set_speed" override = "mh_dev">
+			<arg name = "speed" direction = "in" type = "u"/>
+		</method>
+		<method name = "set_repeat" override = "mh_dev">
+		</method>
+		<method name = "set_shuffle" override = "mh_dev">
+		</method>
+		<method name = "set_buffer_time" override = "mh_dev">
+		</method>
+
+		<signal name = "mixed"/>
+	</klass>
+
+	<klass name = "mh_state" parent = "g_object" parent_header = "glib-object.h">
+		<method name = "action">
+			<arg name = "event" direction = "in" type = "u"/>
+			<arg name = "param1" direction = "in" type = "p"/>
+			<arg name = "param2" direction = "in" type = "p"/>
+		</method>
+		<method name = "open"/>
+		<method name = "close"/>
+	</klass>
+
+	<klass name = "mh_state_playing" parent = "mh_state" parent_header = "mh_state.h">
+		<method name = "action" override = "mh_state">
+			<arg name = "event" direction = "in" type = "u"/>
+			<arg name = "param1" direction = "in" type = "p"/>
+			<arg name = "param2" direction = "in" type = "p"/>
+		</method>
+		<method name = "open" override = "mh_state"/>
+		<method name = "close" override = "mh_state"/>
+	</klass>
+	
+	<klass name = "mh_state_ready" parent = "mh_state" parent_header = "mh_state.h">
+		<method name = "action" override = "mh_state">
+			<arg name = "event" direction = "in" type = "u"/>
+			<arg name = "param1" direction = "in" type = "p"/>
+			<arg name = "param2" direction = "in" type = "p"/>
+		</method>
+		<method name = "open" override = "mh_state"/>
+		<method name = "close" override = "mh_state"/>
+	</klass>
+		
+	<klass name = "mh_state_switching" parent = "mh_state" parent_header = "mh_state.h">
+		<method name = "action" override = "mh_state">
+			<arg name = "event" direction = "in" type = "u"/>
+			<arg name = "param1" direction = "in" type = "p"/>
+			<arg name = "param2" direction = "in" type = "p"/>
+		</method>
+		<method name = "open" override = "mh_state"/>
+		<method name = "close" override = "mh_state"/>
+	</klass>
+		
+	<klass name = "mh_state_seeking" parent = "mh_state" parent_header = "mh_state.h">
+		<method name = "action" override = "mh_state">
+			<arg name = "event" direction = "in" type = "u"/>
+			<arg name = "param1" direction = "in" type = "p"/>
+			<arg name = "param2" direction = "in" type = "p"/>
+		</method>
+		<method name = "open" override = "mh_state"/>
+		<method name = "close" override = "mh_state"/>
+	</klass>
+
+	<klass name = "mh_state_pause" parent = "mh_state" parent_header = "mh_state.h">
+		<method name = "action" override = "mh_state">
+			<arg name = "event" direction = "in" type = "u"/>
+			<arg name = "param1" direction = "in" type = "p"/>
+			<arg name = "param2" direction = "in" type = "p"/>
+		</method>
+		<method name = "open" override = "mh_state"/>
+		<method name = "close" override = "mh_state"/>
+	</klass>
+
+	<klass name = "mh_pb" parent="mh_io" parent_header="mh_io.h">
+		<event name = "dispatch">
+			<arg name = "event" direction = "in" type = "u"/>
+			<arg name = "param1" direction = "in" type = "p"/>
+			<arg name = "param2" direction = "in" type = "p"/>
+		</event>
+
+		<event name = "play_items">
+			<arg name = "items" direction = "in" type = "p"/>
+			<arg name = "index" direction = "in" type = "u"/>
+		</event>
+		<event name = "stop">
+		</event>
+		<event name = "play">
+		</event>
+		<event name = "pause">
+		</event>
+		<event name = "play_pause">
+		</event>
+		<event name = "resume">
+		</event>
+		<event name = "set_position">
+			<arg name = "second" direction = "in" type = "u"/>
+		</event>
+		<event name = "forward">
+		</event>
+		<event name = "forward_done">
+		</event>
+		<event name = "backward">
+		</event>
+		<event name = "backward_done">
+		</event>
+		<event name = "set_index">
+		</event>
+		<event name = "set_speed">
+			<arg name = "speed" direction = "in" type = "u"/>
+		</event>
+		<event name = "set_repeat">
+		</event>
+		<event name = "set_shuffle">
+		</event>
+
+		<signal name = "status_update">
+			<arg name = "type" type = "u"/>
+			<arg name = "data" type = "u"/>
+		</signal>
+	</klass>
+
+
+	<klass name = "mh_col_playlist" parent="mh_col" parent_header="mh_col.h">
+		<method name = "foreach" override = "mh_col">
+		</method>
+		<method name = "count" override = "mh_col">
+		</method>
+		<method name = "filter" override = "mh_col">
+		</method>
+	</klass>
+
+	<klass name = "mh_devices" parent="mh_io" parent_header="mh_io.h">
+		<method name = "instance">
+		</method>
+		<method name = "register_cb">
+		</method>
+		<method name = "output_request">
+		</method>
+		<signal name = "device_status">
+			<arg name = "device" type = "u"/>
+			<arg name = "type" type = "u"/>
+			<arg name = "status" type = "u"/>
+		</signal>
+		<signal name = "idev_attached">
+			<arg name = "verdor_id" type = "q"/>
+			<arg name = "product_id" type = "q"/>
+		</signal>
+		<signal name = "idev_detached">
+		</signal>
+		<signal name = "udisk_attached">
+			<arg name = "path" type = "s"/>
+		</signal>
+		<signal name = "udisk_detached">
+		</signal>
+		<signal name = "mtp_attached">
+			<arg name = "path" type = "s"/>
+		</signal>
+		<signal name = "mtp_detached">
+		</signal>
+	</klass>
+</node>

@@ -1,0 +1,14 @@
+diff --git a/mDNSCore/mDNS.c b/mDNSCore/mDNS.c
+index 22b6995..f0ce44d 100755
+--- a/mDNSCore/mDNS.c
++++ b/mDNSCore/mDNS.c
+@@ -666,7 +666,7 @@ mDNSlocal void AnswerAllLocalQuestionsWithLocalAuthRecord(mDNS *const m, AuthRec
+     (ResourceRecordIsValidAnswer(RR) && \
+      ((RR)->resrec.InterfaceID == mDNSInterface_Any || (RR)->resrec.InterfaceID == (INTID)))
+ 
+-#define DefaultProbeCountForTypeUnique ((mDNSu8)3)
++#define DefaultProbeCountForTypeUnique ((mDNSu8)0)
+ #define DefaultProbeCountForRecordType(X)      ((X) == kDNSRecordTypeUnique ? DefaultProbeCountForTypeUnique : (mDNSu8)0)
+ 
+ // See RFC 6762: "8.3 Announcing"
+

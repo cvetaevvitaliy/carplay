@@ -1,0 +1,128 @@
+--- mDNSPosix/Makefile.orig	2015-03-04 11:09:18.000000000 +0800
++++ mDNSPosix/Makefile	2018-01-04 11:40:18.947781515 +0800
+@@ -54,14 +54,14 @@
+ SHAREDDIR ?= ../mDNSShared
+ JDK = /usr/jdk
+ 
+-CC = @cc
++#CC = @cc
+ BISON = @bison
+ FLEX = @flex
+-ST = @strip
++#ST = @strip
+ LD = ld -shared
+ CP = cp
+ RM = rm
+-LN = ln -s -f
++LN = ln -s -f -r
+ CFLAGS_COMMON = -I$(COREDIR) -I$(SHAREDDIR) -I$(OBJDIR) -fwrapv -W -Wall -DPID_FILE=\"/var/run/mdnsd.pid\" -DMDNS_UDS_SERVERPATH=\"/var/run/mdnsd\"
+ CFLAGS_PTHREAD =
+ LINKOPTS =
+@@ -143,7 +143,7 @@
+ 
+ ifeq ($(os),x)
+ # We have to define __MAC_OS_X_VERSION_MIN_REQUIRED=__MAC_OS_X_VERSION_10_4 or on Leopard
+-# we get build failures: ‘daemon’ is deprecated (declared at /usr/include/stdlib.h:283)
++# we get build failures: ‘daemon�?is deprecated (declared at /usr/include/stdlib.h:283)
+ CFLAGS_OS = -DHAVE_IPV6 -no-cpp-precomp -Werror -Wdeclaration-after-statement \
+ 	-D__MAC_OS_X_VERSION_MIN_REQUIRED=__MAC_OS_X_VERSION_10_4 \
+ 	-D__APPLE_USE_RFC_2292 #-Wunreachable-code
+@@ -168,7 +168,7 @@
+ NSSVERSION  := 0.2
+ NSSLIBFILE  := $(NSSLIBNAME)-$(NSSVERSION).so
+ NSSLINKNAME := $(NSSLIBNAME).so.2
+-NSSINSTPATH := /lib
++NSSINSTPATH := $(INSTBASE)/lib
+ 
+ # If not otherwise defined, we install into /usr/lib and /usr/include
+ # and our startup script is called mdns (e.g. /etc/init.d/mdns)
+@@ -185,11 +185,14 @@
+ 
+ # If directory /usr/share/man exists, then we install man pages into that, else /usr/man
+ ifeq ($(wildcard /usr/share/man), /usr/share/man)
+-MANPATH := /usr/share/man
++MANPATH := $(INSTBASE)/share/man
+ else
+-MANPATH := /usr/man
++MANPATH := $(INSTBASE)/man
+ endif
+ 
++ifneq ($(INSTBASE),"")
++STARTUPSCRIPTDIR = $(INSTBASE)/../etc/rc.d
++else
+ # If directories /etc/init.d/rc*.d exist, then we install into that (Suse)
+ ifeq ($(wildcard /etc/init.d/rc2.d/), /etc/init.d/rc2.d/)
+ STARTUPSCRIPTDIR = /etc/init.d
+@@ -206,7 +209,8 @@
+ RUNLEVELSCRIPTSDIR = /etc
+ else
+ # else install into /etc/rc.d/ (*BSD)
+-STARTUPSCRIPTDIR = $(INSTBASE)/etc/rc.d
++STARTUPSCRIPTDIR = $(INSTBASE)/../etc/rc.d
++endif
+ endif
+ endif
+ endif
+@@ -224,6 +228,14 @@
+ 	@if test ! -d $(OBJDIR)   ; then mkdir -p $(OBJDIR)   ; fi
+ 	@if test ! -d $(BUILDDIR) ; then mkdir -p $(BUILDDIR) ; fi
+ 
++	@if test ! -d $(INSTBASE)/sbin ; then mkdir -p $(INSTBASE)/sbin ; fi
++	@if test ! -d $(INSTBASE)/bin ; then mkdir -p $(INSTBASE)/bin ; fi
++	@if test ! -d $(INSTBASE)/lib ; then mkdir -p $(INSTBASE)/lib ; fi
++	@if test ! -d $(INSTBASE)/include ; then mkdir -p $(INSTBASE)/include ; fi
++	@if test ! -d $(INSTBASE)/../etc/rc.d ; then mkdir -p $(INSTBASE)/../etc/rc.d ; fi
++	@if test ! -d $(INSTBASE)/share/man/man8 ; then mkdir -p $(INSTBASE)/share/man/man8 ; fi
++	@if test ! -d $(INSTBASE)/share/man/man5  ; then mkdir -p $(INSTBASE)/share/man/man5 ; fi
++
+ # clean removes targets and objects
+ clean:
+ 	@if test -d $(OBJDIR)   ; then rm -r $(OBJDIR)   ; fi
+@@ -292,12 +304,12 @@
+ InstalledClients: $(INSTBASE)/bin/dns-sd
+ 	@echo $+ " installed"
+ 
+-InstalledNSS: $(NSSINSTPATH)/$(NSSLINKNAME) /etc/nss_mdns.conf $(MANPATH)/man5/nss_mdns.conf.5 $(MANPATH)/man8/libnss_mdns.8
++InstalledNSS: $(NSSINSTPATH)/$(NSSLINKNAME) $(INSTBASE)/../etc/nss_mdns.conf $(MANPATH)/man5/nss_mdns.conf.5 $(MANPATH)/man8/libnss_mdns.8
+ 	@echo $+ " installed"
+ 
+ # Note: If daemon already installed, we make sure it's stopped before overwriting it
+ $(INSTBASE)/sbin/mdnsd: $(BUILDDIR)/mdnsd
+-	@if test -x $@; then $(STARTUPSCRIPTDIR)/$(STARTUPSCRIPTNAME) stop; fi
++#	@if test -x $@; then $(STARTUPSCRIPTDIR)/$(STARTUPSCRIPTNAME) stop; fi
+ 	$(CP) $< $@
+ 
+ $(INSTBASE)/lib/libdns_sd.$(LDSUFFIX).$(LIBVERS): $(BUILDDIR)/libdns_sd.$(LDSUFFIX)
+@@ -316,7 +328,7 @@
+ $(STARTUPSCRIPTDIR)/$(STARTUPSCRIPTNAME): mdnsd.sh $(STARTUPSCRIPTDIR) $(INSTBASE)/sbin/mdnsd
+ 	$(CP) $< $@
+ 	chmod ugo+x $@
+-	$@ start
++#	$@ start
+ ifdef RUNLEVELSCRIPTSDIR
+ ifeq ($(wildcard $(RUNLEVELSCRIPTSDIR)/runlevels/default), $(RUNLEVELSCRIPTSDIR)/runlevels/default)
+ 	$(LN) $@ $(RUNLEVELSCRIPTSDIR)/runlevels/default/mdns
+@@ -347,19 +359,19 @@
+ 
+ $(NSSINSTPATH)/$(NSSLINKNAME): $(NSSINSTPATH)/$(NSSLIBFILE)
+ 	$(LN) $< $@
+-	ldconfig
++#	ldconfig
+ 
+ $(NSSINSTPATH)/$(NSSLIBFILE): $(BUILDDIR)/$(NSSLIBFILE)
+ 	$(CP) $< $@
+ 	chmod 444 $@
+ 
+-/etc/nss_mdns.conf: nss_mdns.conf
++$(INSTBASE)/../etc/nss_mdns.conf: nss_mdns.conf
+ 	$(CP) $< $@
+ 	chmod 444 $@
+ 	# Check the nsswitch.conf file.
+ 	# If 'mdns' does not already appear on the "hosts:" line, then add it right before 'dns'
+-	cp -f /etc/nsswitch.conf /etc/nsswitch.conf.pre-mdns
+-	sed -e '/mdns/!s/^\(hosts:.*\)dns\(.*\)/\1mdns dns\2/' /etc/nsswitch.conf.pre-mdns > /etc/nsswitch.conf
++	cp -f /etc/nsswitch.conf $(INSTBASE)/../etc/nsswitch.conf.pre-mdns
++	sed -e '/mdns/!s/^\(hosts:.*\)dns\(.*\)/\1mdns dns\2/' $(INSTBASE)/../etc/nsswitch.conf.pre-mdns > $(INSTBASE)/../etc/nsswitch.conf
+ 
+ #############################################################################
+ 

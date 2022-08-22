@@ -1,0 +1,190 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  iAP2Hid.c
+ *
+ *    Description:  
+ *
+ *        Version:  1.0
+ *        Created:  09/24/2013 11:36:08 AM
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  jiang pengfei (), jiang.pf@neusoft.com
+ *   Organization:  www.neusoft.com
+ *
+ * =====================================================================================
+ */
+#include <stdio.h>
+#include <iAP2Link.h>
+#include <glib.h>
+#include <string.h>
+#include "iAP2Hid.h"
+#include "iAP2Init.h"
+#include "debug.h"
+#include "iAP2ControlSession.h"
+
+static uint8_t hidDesc[]	=	{
+0x05, 0x01, //USAGE_PAGE (Generic Desktop)
+0x09, 0x06, //USAGE (Keyboard)
+0xA1, 0x01, //COLLECTION (Application)
+0x05, 0x08, //USAGE_PAGE (LEDs)
+0x15, 0x00, //LOGICAL_MINIMUM (0)
+0x25, 0x01, //LOGICAL_MAXIMUM (1)
+0x09, 0x02, //USAGE (Caps Lock)
+0x75, 0x01, //REPORT_SIZE (1)
+0x95, 0x01, //REPORT_COUNT (1)
+0x91, 0x02, //OUTPUT (Data,Var,Abs)
+0x75, 0x07, //REPORT_SIZE (7)
+0x95, 0x01, //REPORT_COUNT (1)
+0x91, 0x03, //OUTPUT (Cnst,Var,Abs)
+0x05, 0x07, //USAGE_PAGE (Keyboard)
+0x19, 0xE0, //USAGE_MINIMUM (Keyboard LeftControl)
+0x29, 0xE7, //USAGE_MAXIMUM (Keyboard Right GUI)
+0x75, 0x01, //REPORT_SIZE (1)
+0x95, 0x08, //REPORT_COUNT (8)
+0x81, 0x02, //INPUT (Data,Var,Abs)
+0x15, 0x00, //LOGICAL_MINIMUM (0)
+0x26, 0xFF, 0x00, //LOGICAL_MAXIMUM (255)
+0x19, 0x00, //USAGE_MINIMUM (0)
+0x2A, 0xFF, 0x00, //USAGE_MAXIMUM (255)
+0x75, 0x08, //REPORT_SIZE (8)
+0x95, 0x05, //REPORT_COUNT (5)
+0x81, 0x00, //INPUT (Data,Ary,Abs)
+0x05, 0x0C, //USAGE_PAGE (Consumer Devices)
+0x15, 0x00, //LOGICAL_MINIMUM (0)
+0x25, 0x01, //LOGICAL_MAXIMUM (1)
+0x09, 0x40, //USAGE (Menu)
+0x0A, 0x21, 0x02, //USAGE (AC Search)
+0x0A, 0xB1, 0x01, //USAGE (AL Screen, 0xSaver)
+0x0A, 0xAE, 0x01, //USAGE (AL Keyboard, 0xLayout)
+0x09, 0xB6, //USAGE (Scan Previous, 0xTrack)
+0x09, 0xCD, //USAGE (Play/Pause)
+0x09, 0xB5, //USAGE (Scan Next Track)
+0x09, 0xE2, //USAGE (Mute)
+0x09, 0xEA, //USAGE (Volume Down)
+0x09, 0xE9, //USAGE (Volume Up)
+0x09, 0x30, //USAGE (Power)
+0x75, 0x01, //REPORT_SIZE (1)
+0x95, 0x0B, //REPORT_COUNT (11)
+0x81, 0x02, //INPUT (Data,Var,Abs)
+0x75, 0x05, //REPORT_SIZE (5)
+0x95, 0x01, //REPORT_COUNT (1)
+0x81, 0x03, //INPUT (Cnst,Var,Abs)
+0xC0 //END_COLLECTION 
+};
+
+static uint8_t hidStartParams[]	=	{
+	0x00, 0x06, 0x00, 0x00, 0x01, 0x01,
+	0x00, 0x06, 0x00, 0x01, 0x05, 0xAC,
+	0x00, 0x06, 0x00, 0x02, 0x00, 0x01
+};
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  iAP2GetHidStartParams
+ *  Description:  
+ * =====================================================================================
+ */
+void iAP2GetHidStartParams ( uint8_t ** hidParam, int * length )
+{
+	int _len	=	sizeof(hidDesc) + 4 + sizeof(hidStartParams);
+	uint8_t * _param	=	g_malloc0(_len);
+
+	memcpy(_param, hidStartParams, sizeof(hidStartParams));
+
+	_param[sizeof(hidStartParams) + 0]	=	IAP2_HI_BYTE(sizeof(hidDesc) + 4);
+	_param[sizeof(hidStartParams) + 1]	=	IAP2_LO_BYTE(sizeof(hidDesc) + 4);
+	_param[sizeof(hidStartParams) + 2]	=	0x00;
+	_param[sizeof(hidStartParams) + 3]	=	0x04;
+
+	memcpy(_param + sizeof(hidStartParams) + 4, hidDesc, sizeof(hidDesc));
+
+	* hidParam	=	_param;
+	* length	=	_len;
+}		/* -----  end of function iAP2GetHidStartParams  ----- */
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  iAP2HidSendCommand
+ *  Description:  
+ * =====================================================================================
+ */
+void iAP2HidSendCommand (uint16_t cmd)
+{
+	int _offset, _byte, _bit;
+	uint8_t _hidDesc[9]	=	{0};
+	uint8_t _hidMessage[0x06 + 0x0D]	=	{
+		0x00, 0x06, 0x00, 0x00, 0x01, 0x01,
+		0x00, 0x0D, 0x00, 0x01
+	};
+//	uint8_t _comId[]	=	{0x01, 0x01};
+
+	switch(cmd)
+	{
+	case HID_POWER:
+		printf("HID_POWER\n");
+		_offset	=	10;
+		break;
+	case HID_MENU:
+		printf("HID_MENU\n");
+		_offset	=	0;
+		break;
+	case HID_SCAN_NEXT_TRACK:
+		printf("HID_SCAN_NEXT_TRACK\n");
+		_offset	=	6;
+		break;
+	case HID_SCAN_PREVIOUS_TRACK:
+		printf("HID_SCAN_PREVIOUS_TRACK\n");
+		_offset	=	4;
+		break;
+	case HID_PLAY_PAUSE:
+		printf("HID_PLAY_PAUSE\n");
+		_offset	=	5;
+		break;
+	case HID_MUTE:
+		printf("HID_MUTE\n");
+		_offset	=	7;
+		break;
+	case HID_VOLUME_INCREMENT:
+		printf("HID_VOLUME_INCREMENT\n");
+		_offset	=	9;
+		break;
+	case HID_VOLUME_DECREMENT:
+		printf("HID_VOLUME_DECREMENT\n");
+		_offset	=	8;
+		break;
+	case HID_AL_KEYBOARD_LAYOUT:
+		printf("HID_AL_KEYBOARD_LAYOUT\n");
+		_offset	=	3;
+		break;
+	case HID_AL_SCREEN_SAVER:
+		printf("HID_AL_SCREEN_SAVER\n");
+		_offset	=	2;
+		break;
+	case HID_AC_SEARCH:
+		printf("HID_AC_SEARCH\n");
+		_offset	=	1;
+		break;
+	default:
+		DEBUG_ERR("Unknown HID Command\n");
+		assert(0);
+		break;
+	}
+
+	_byte	=	_offset	/ 8;
+	_bit	=	_offset % 8;
+
+	_hidDesc[8 - _byte]	=	(1 << _bit);
+
+	memcpy(_hidMessage + 6 + 4, _hidDesc, sizeof(_hidDesc));
+
+	iAP2SendControlMessage(iAP2InitGetLink(), 0x6802, _hidMessage, sizeof(_hidMessage), IAP2_CONTROL_SESSION_ID);
+	memset(_hidMessage + 6 + 4, 0, sizeof(_hidDesc));
+
+	iAP2SendControlMessage(iAP2InitGetLink(), 0x6802, _hidMessage, sizeof(_hidMessage), IAP2_CONTROL_SESSION_ID);
+
+//	iAP2SendControlMessageWithParam(iAP2InitGetLink(), 0x6803, 0x0000, _comId, sizeof(_comId), IAP2_CONTROL_SESSION_ID);
+}		/* -----  end of function iAP2HidSendCommand  ----- */

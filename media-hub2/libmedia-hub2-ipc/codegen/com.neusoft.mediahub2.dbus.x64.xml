@@ -1,0 +1,701 @@
+<node>
+  <interface name="com.neusoft.mediahub2.dbus">
+	<method name="test_string">
+      <arg name="input" direction="in" type="s"/>
+      <arg name="output" direction="out" type="s"/>
+	</method>
+
+	<method name = "core_register_events_listener"/>
+
+	<signal name = "core_events">
+		<arg name = "event" type = "u"/>
+		<arg name = "type" type = "s"/>
+	</signal>
+
+	<method name = "core_register_devices_listener"/>
+
+	<signal name = "core_devices">
+		<arg name = "dev" type = "t"/>
+		<arg name = "event" type = "u"/>
+	</signal>
+
+	<method name = "dev_register_detach_listener">
+		<arg name = "dev" direction = "in" type = "t"/>
+	</method>
+
+	<method name = "dev_attach_pb">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "pb" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<signal name = "dev_detach">
+		<arg name = "dev" type = "t"/>	
+	</signal>
+
+	<method name = "dev_register_events_listener">
+		<arg name = "dev" direction = "in" type = "t"/>
+	</method>
+
+	<method name = "dev_request_app_launch">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "app_bundle_id" direction = "in" type = "s"/>
+	</method>
+
+	<signal name = "dev_event">
+		<arg name = "dev" type = "t"/>
+		<arg name = "scan_type" type = "u"/>
+		<arg name = "item_type" type = "u"/>
+		<arg name = "data" type = "t"/>
+		<arg name = "percent" type = "u"/>
+	</signal>
+
+	<method name = "core_start">
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+    <method name = "core_stop">
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "obj_get_properties">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "properties" direction = "in" type = "as"/>
+		<arg name = "values" direction = "out" type = "av"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "obj_get_properties_type">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "properties" direction = "in" type = "as"/>
+		<arg name = "type" direction = "out" type = "at"/>
+	</method>
+	
+	<method name = "obj_get_property_type">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "property" direction = "in" type = "s"/>
+		<arg name = "type" direction = "out" type = "t"/>
+	</method>
+
+	<method name = "obj_ref">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "ret_obj" direction = "out" type = "t"/>
+	</method>
+	<method name = "obj_unref">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "obj_set_properties">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "properties" direction = "in" type = "a(sv)"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "obj_signal_connect">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "signal" direction = "in" type = "s"/>
+	</method>
+	
+	<signal name = "request_ui">
+		<arg name = "obj" type = "t"/>
+	</signal>
+
+	<signal name = "modes_changed">
+		<arg name = "obj" type = "t"/>
+		<arg name = "screen" type = "s"/>
+		<arg name = "main_audio" type = "s"/>
+		<arg name = "speech_entity" type = "s"/>
+		<arg name = "speech_mode" type = "s"/>
+		<arg name = "phone" type = "s"/>
+		<arg name = "turns" type = "s"/>
+	</signal>
+
+	<signal name = "disable_bluetooth">
+		<arg name = "obj" type = "t"/>
+		<arg name = "device_id" type = "s"/>
+	</signal>
+
+	<signal name = "ea_session_start">
+		<arg name = "obj" type = "t"/>
+		<arg name = "protocol_id" type = "u"/>
+		<arg name = "session_id" type = "u"/>
+		<arg name = "pb" type = "u"/>
+	</signal>
+
+	<signal name = "ea_session_stop">
+		<arg name = "obj" type = "t"/>
+		<arg name = "session_id" type = "u"/>
+	</signal>
+
+	<signal name = "ea_session_data">
+		<arg name = "obj" type = "t"/>
+		<arg name = "data" type = "v"/>
+	</signal>
+
+	<signal name = "ea_session_send_pb">
+		<arg name = "obj" type = "u"/>
+		<arg name = "pb" type = "u"/>
+	</signal>
+
+	<method name = "dev_write_ea_data">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "data" direction = "in"  type = "v"/>
+		<arg name = "len" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "folder_get_children">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "filter" direction = "in" type = "t"/>
+		<arg name = "position" direction = "in" type = "u"/>
+		<arg name = "count" direction = "in" type = "i"/>
+		<arg name = "order" direction = "in" type = "u"/>
+		<arg name = "count" direction = "out" type = "i"/>
+		<arg name = "items" direction = "out" type = "at"/>
+	</method>
+
+	<method name = "folder_create_playlist">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "filter" direction = "in" type = "t"/>
+		<arg name = "recursive" direction = "in" type = "b"/>
+		<arg name = "playlist" direction = "out" type = "t"/>
+	</method>
+
+	<method name = "pb_play_by_list">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "playlist" direction = "in" type = "t"/>
+		<arg name = "index" direction = "in" type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "pb_play_radio_by_index">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "index" direction = "in" type = "u"/>
+	</method>
+	
+	<method name = "pb_next">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+	<method name = "pb_previous">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+	<method name = "pb_close">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+	<method name = "pb_stop">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+	<method name = "pb_play">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+	<method name = "pb_pause">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+	<method name = "pb_play_pause">
+		<arg name = "obj" direction = "in" type = "t"/>
+	</method>
+	<method name = "pb_seek">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "second" direction = "in" type = "u"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+	<method name = "pb_forward">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+	<method name = "pb_forward_done">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+	<method name = "pb_backward">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+	<method name = "pb_backward_done">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+	<method name = "pb_create">
+		<arg name = "obj" direction = "out" type = "t"/>
+	</method>
+
+	<method name = "pb_register_events_listener">
+		<arg name = "self" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<signal name = "pb_events">
+		<arg name = "pb" type = "t"/>
+		<arg name = "type" type = "u"/>
+		<arg name = "data" type = "v"/>
+	</signal>
+
+	<method name = "pb_playlist_change">
+		<arg name = "pb" direction = "in" type = "t"/>
+		<arg name = "playlist" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "shm_unlink">
+		<arg name = "name" direction = "in" type = "s"/>
+	</method>
+
+	<method name = "item_foreach">
+		<arg name = "items" direction = "in" type = "at"/>
+		<arg name = "data" direction = "out" type = "a(tsusxuv)"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "item_foreach_fd">
+		<arg name = "items" direction = "in" type = "at"/>
+		<arg name = "fd" direction = "in" type = "h"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+
+	<method name = "item_foreach_shm">
+		<arg name = "items" direction = "in" type = "at"/>
+		<arg name = "shm" direction = "out" type = "s"/>
+		<arg name = "size" direction = "out" type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name =	"dev_start_scan">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "type" direction = "in" type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+	
+	<method name =	"dev_scan_abort">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+
+	<method name = "dev_restore_playlist">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "playlist_id" direction = "in" type = "x"/>
+		<arg name = "playlist" direction = "out" type = "t"/>
+	</method>
+
+	<method name = "dev_get_playlist_info">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "playlist_info" direction = "out" type = "a(xs)"/>
+	</method>
+
+	<method name = "playlist_foreach">
+		<arg name = "playlist" direction = "in" type = "t"/>
+		<arg name = "start" direction = "in" type = "i"/>
+		<arg name = "count" direction = "in" type = "i"/>
+		<arg name = "data" direction = "out" type = "a(susxxuxuv)"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "playlist_foreach_shm">
+		<arg name = "playlist" direction = "in" type = "t"/>
+		<arg name = "start" direction = "in" type = "i"/>
+		<arg name = "count" direction = "in" type = "i"/>
+		<arg name = "shm" direction = "out" type = "s"/>
+		<arg name = "size" direction = "out" type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+	<method name = "playlist_sort">
+		<arg name = "playlist" direction = "in" type = "t"/>
+		<arg name = "sort_type" direction = "in" type = "u"/>
+		<arg name = "order_type" direction = "in" type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "filter_create">
+		<arg name = "filter_str" direction = "in" type = "s"/>
+		<arg name = "filter" direction = "out" type = "t"/>
+	</method>
+	<method name = "dev_create_col">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "col" direction = "out" type = "t"/>
+	</method>
+
+	<method name = "folder_seek">
+		<arg name = "folder" direction = "in" type = "t"/>
+		<arg name = "filter" direction = "in" type = "t"/>
+		<arg name = "pos" direction = "in" type = "u"/>
+		<arg name = "order" direction = "in" type = "u"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+
+	<method name = "pb_register_status_listener">
+		<arg name = "self" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<signal name = "status_update">
+		<arg name = "pb" type = "t"/>
+		<arg name = "type" type = "u"/>
+	</signal>
+	<method name = "pb_resize">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "offsetx" direction = "in" type = "u"/>
+		<arg name = "offsety" direction = "in" type = "u"/>
+		<arg name = "width" direction = "in" type = "u"/>
+		<arg name = "height" direction = "in" type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+	<method name = "pb_pixel_aspect_ratio">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "pixel_n" direction = "in" type = "u"/>
+		<arg name = "pixel_d" direction = "in" type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+	<method name = "pb_audiobook_playback_speed">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "speed" direction = "in" type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "col_create">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "col" direction = "out" type = "t"/>
+	</method>
+
+	<method name = "col_retrieve_data">
+		<arg name = "col" direction = "in" type = "t"/>
+		<arg name = "type" direction = "in" type = "u"/>
+		<arg name = "media_type" direction = "in" type = "u"/>
+		<arg name = "count" direction = "in" type = "i"/>
+		<arg name = "count" direction = "out" type = "i"/>
+		<arg name = "fuzzy" direction = "in" type = "b"/>
+		<arg name = "data" direction = "out" type = "a(s)"/>
+	</method>
+
+	<method name = "col_retrieve_album">
+		<arg name = "col" direction = "in" type = "t"/>
+		<arg name = "type" direction = "in" type = "u"/>
+		<arg name = "media_type" direction = "in" type = "u"/>
+		<arg name = "count" direction = "in" type = "i"/>
+		<arg name = "count" direction = "out" type = "i"/>
+		<arg name = "fuzzy" direction = "in" type = "b"/>
+		<arg name = "data" direction = "out" type = "a(ssu)"/>
+	</method>
+
+	<method name = "col_create_playlist">
+		<arg name = "col" direction = "in" type = "t"/>
+		<arg name = "type" direction = "in" type = "u"/>
+		<arg name = "media_type" direction = "in" type = "u"/>
+		<arg name = "fuzzy" direction = "in" type = "b"/>
+		<arg name = "playlist" direction = "out" type = "t"/>
+	</method>
+
+	<method name = "col_set_favorite">
+		<arg name = "col" direction = "in" type = "t"/>
+		<arg name = "type" direction = "in" type = "u"/>
+		<arg name = "favorite" direction = "in" type = "u"/>
+	</method>
+
+	
+	<method name = "misc_set_filter">
+		<arg name =	"type_filter" direction = "in" type = "a(us)"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "dev_save_playlist">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "name" direction = "in" type = "s"/>
+		<arg name = "playlist" direction = "in" type = "t"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+
+	<method name = "dev_update_playlist">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "name" direction = "in" type = "s"/>
+		<arg name = "playlist" direction = "in" type = "t"/>
+		<arg name = "playlist_id" direction= "in" type = "x"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+
+	<method name = "dev_delete_playlist">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "playlist_id" direction= "in" type = "x"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+
+	<method name = "dev_get_radiolist">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "count" direction = "in" type = "i"/>
+		<arg name = "count" direction = "out" type = "i"/>
+		<arg name = "data" direction = "out" type = "a(s)"/>
+	</method>
+	
+	<method name = "misc_reset">
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "misc_db_restore">
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+	
+	<method name="misc_db_delete_by_serial_number">
+  		<arg name="serialNum" direction="in" type="s"/>
+	</method>
+	
+	<method name = "col_add_filter">
+		<arg name = "col" direction = "in" type = "t"/>
+		<arg name = "filter" direction = "in" type = "a(uv)"/>
+		<arg name = "result" direction = "out" type = "u"/>
+	</method>
+	<method name = "col_filter_clear">
+		<arg name = "col" direction = "in" type = "t"/>
+		<arg name = "result" direction = "out" type = "u"/>
+	</method>
+	<method name = "col_set_retrieve_key">
+		<arg name = "col" direction = "in" type = "t"/>
+		<arg name = "type" direction = "in" type = "u"/>
+		<arg name = "result" direction = "out" type = "u"/>
+	</method>
+	<method name = "col_set_order_type">
+		<arg name = "col" direction = "in" type = "t"/>
+		<arg name = "type" direction = "in" type = "u"/>
+		<arg name = "result" direction = "out" type = "u"/>
+	</method>
+
+	<method name="pb_get_track_info">
+  		<arg name="pb" direction="in" type="t"/>
+  		<arg name="track_info" direction="out" type="v"/>
+	</method>
+	<method name="pb_get_subtitle_info">
+  		<arg name="pb" direction="in" type="t"/>
+  		<arg name="subtitle_info" direction="out" type="v"/>
+	</method>
+
+	<method name="dev_get_item_by_uri">
+  		<arg name="dev" direction="in" type="t"/>
+  		<arg name="uri" direction="in" type="s"/>
+		<arg name="item" direction="out" type="t"/>
+	</method>
+
+	<method name="dev_create_empty_playlist">
+  		<arg name="dev" direction="in" type="t"/>
+  		<arg name="playlist" direction="out" type="t"/>
+	</method>
+	
+	<method name="playlist_append">
+  		<arg name="playlist" direction="in" type="t"/>
+  		<arg name="items" direction="in" type="at"/>
+		<arg name="count" direction="in" type="u"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+
+	<method name="playlist_append_playlist">
+  		<arg name="playlist_src" direction="in" type="t"/>
+  		<arg name="playlist_des" direction="in" type="t"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+
+	<method name="playlist_insert">
+  		<arg name="playlist" direction="in" type="t"/>
+		<arg name="index" direction="in" type="u"/>
+  		<arg name="items" direction="in" type="at"/>
+		<arg name="count" direction="in" type="u"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+
+	<method name="playlist_remove">
+  		<arg name="playlist" direction="in" type="t"/>
+  		<arg name="index" direction="in" type="u"/>
+		<arg name="count" direction="in" type="u"/>
+		<arg name="res" direction="out" type = "i"/>
+	</method>
+
+	<method name="file_get_tag">
+  		<arg name="file_path" direction="in" type="s"/>
+  		<arg name="tag" direction="out" type="(ssssuuu)"/>
+	</method>
+
+	<method name = "pb_set_pipeline_status">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "status" direction = "in" type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "send_signal_touch">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "press_type" direction = "in" type = "u"/>
+		<arg name =	"x"	direction = "in" type = "u"/>
+		<arg name = "y" direction = "in" type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "dev_start">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "dev_register_status_listener">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+
+	<signal name = "dev_status">
+		<arg name = "dev" type = "t"/>
+		<arg name = "status" type = "u"/>
+	</signal>
+
+	<method name = "dev_add_file">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "dest" direction = "in" type = "t"/>
+		<arg name = "source" direction = "in" type = "t"/>
+		<arg name = "item" direction = "out" type = "t"/>
+	</method>
+
+	<method name = "dev_detete_file">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "item" direction = "in" type = "t"/>
+		<arg name = "result" direction = "out" type = "u"/>
+	</method>
+
+	<method name="misc_set_bluetoothids">
+  		<arg name="ids" direction="in" type="s"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<signal name = "start_location_info">
+		<arg name = "obj" type = "t"/>
+		<arg name = "location_id" type = "u"/>
+	</signal>
+
+	<signal name = "stop_location_info">
+		<arg name = "obj" type = "t"/>
+	</signal>
+	
+	<method name = "dev_write_location_data">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "data" direction = "in"  type = "s"/>
+	</method>
+
+	<signal name = "start_vehicle_status_updates">
+		<arg name = "obj" type = "t"/>
+		<arg name = "status_id" type = "u"/>
+	</signal>
+
+	<signal name = "stop_vehicle_status_updates">
+		<arg name = "obj" type = "t"/>
+	</signal>
+
+	<method name = "dev_send_vehicle_status">
+		<arg name = "obj" type = "t"/>
+		<arg name = "remainingRange" direction = "in"  type = "u"/>
+		<arg name = "outsideTempreture" direction = "in"  type = "i"/>
+		<arg name = "rangeWarning" direction = "in"  type = "i"/>
+	</method>
+
+	<method name = "misc_set_iap_device_mode">
+		<arg name =	"mode" direction = "in" type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "misc_save_pb">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "misc_carplay_init_modes">
+		<arg name = "data" direction = "in"  type = "v"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name = "dev_register_module_status">
+		<arg name = "dev" direction = "in" type = "t"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+	<signal name = "dev_module_status">
+		<arg name = "dev" type = "t"/>
+		<arg name = "cnt" type = "u"/>
+		<arg name = "module_status_list" type="a(uu)"/>
+	</signal>
+
+	<signal name = "duck_audio">
+		<arg name = "obj" type = "t"/>
+		<arg name = "durationms" type = "d"/>
+		<arg name = "volume" type = "d"/>
+	</signal>
+
+	<signal name = "unduck_audio">
+		<arg name = "obj" type = "t"/>
+		<arg name = "durationms" type = "d"/>
+	</signal>
+	<method name = "carlife_register_bt_hfp_request">
+		<arg name = "dev" direction = "in" type = "t"/>
+	</method>
+
+	<signal name = "carlife_bt_hfp_request">
+		<arg name = "dev" type = "t"/>
+		<arg name = "request_type" type = "u"/>
+		<arg name = "phone_num" type = "s"/>
+		<arg name = "dtmfcode" type	=	"i"/>
+	</signal>
+
+
+<method name = "core_find_dev">
+		<arg name=	"devParam" direction="in" type= "v"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<signal name = "bt_data">
+		<arg name = "obj" type = "t"/>
+		<arg name = "data" type = "v"/>
+	</signal>
+
+	<method name = "dev_write_bt_data">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "data" direction = "in"  type = "v"/>
+		<arg name = "len" direction = "out" type = "i"/>
+	</method>
+
+	<signal name = "req_accessory_wifi_conf_info">
+		<arg name = "obj" type = "t"/>
+	</signal>
+
+	<signal name = "wifi_carplay_update">
+		<arg name = "obj" type = "t"/>
+		<arg name = "status_id" type = "u"/>
+	</signal>
+
+	<method name = "dev_send_wifi_conf_info">
+		<arg name = "obj" direction = "in" type = "t"/>
+		<arg name = "ssid" direction = "in"  type = "v"/>
+		<arg name = "pass" direction = "in"  type = "v"/>
+		<arg name = "securityType" direction = "in"  type = "u"/>
+		<arg name = "channel" direction = "in"  type = "u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+	
+	<signal name = "audio_info">
+		<arg name = "obj" type = "t"/>
+		<arg name = "status" type = "u"/>
+		<arg name = "type" type = "u"/>
+		<arg name = "rate" type = "u"/>
+		<arg name = "channel" type = "u"/>
+	</signal>
+
+	<method name="misc_set_righthand">
+  		<arg name="status" direction="in" type="u"/>
+		<arg name = "res" direction = "out" type = "i"/>
+	</method>
+
+	<method name="dev_search_name">
+		<arg name="dev" direction="in" type="t"/>
+		<arg name="type" direction="in" type="u"/>
+		<arg name="string" direction="in" type="s"/>
+		<arg name="count" direction="in" type="i"/>
+		<arg name="count" direction="out" type="i"/>
+		<arg name = "items" direction = "out" type = "at"/>
+	</method>
+  </interface> 
+</node>

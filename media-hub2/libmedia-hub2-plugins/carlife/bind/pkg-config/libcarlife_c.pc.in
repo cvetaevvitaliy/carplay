@@ -1,0 +1,13 @@
+﻿# Package Information for pkg-config
+
+prefix=@PREFIX@
+exec_prefix=@EXEC_PREFIX@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: libcarlife_c
+Description: Neusoft media-hub v2.0 carlife 
+Version: @VERSION@
+Requires:  libcarlifevehicle
+Libs: -L\${libdir} -lcarlife_c 
+Cflags: -I\${includedir}

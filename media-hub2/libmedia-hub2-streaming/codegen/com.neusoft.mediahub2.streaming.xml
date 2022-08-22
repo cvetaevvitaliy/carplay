@@ -1,0 +1,14 @@
+<node>
+  <interface name="com.neusoft.mediahub2.streaming">
+	<method name="add_media_mapping">
+      <arg name="uri" direction="in" type="s"/>
+	  <arg name="shared" direction="in"	type="u"/>
+      <arg name="result" direction="out" type="b"/>
+	</method>
+
+	<method name="remove_media_mapping">
+      <arg name="uri" direction="in" type="s"/>
+      <arg name="result" direction="out" type="b"/>
+	</method>
+  </interface> 
+</node>

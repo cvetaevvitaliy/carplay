@@ -1,0 +1,13 @@
+﻿# Package Information for pkg-config
+
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: libcarlifevehicle
+Description: Neusoft carlife
+Version:0.10 
+Requires: protobuf  libxml-2.0 
+Libs: -L\${libdir} -lcarlifevehicle 
+Cflags: -I\${includedir}

@@ -1,0 +1,37 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  iAP2Hid.h
+ *
+ *    Description:  
+ *
+ *        Version:  1.0
+ *        Created:  09/24/2013 11:58:32 AM
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  jiang pengfei (), jiang.pf@neusoft.com
+ *   Organization:  www.neusoft.com
+ *
+ * =====================================================================================
+ */
+
+#ifndef __IAP2_HID_H__
+#define __IAP2_HID_H__
+
+#define HID_POWER				0x0030         	/* Lock */
+#define HID_MENU				0x0040         	/* Home */
+#define HID_SCAN_NEXT_TRACK		0x00B5          /* Transport Right */
+#define HID_SCAN_PREVIOUS_TRACK	0x00B6          /* Transport Left */
+#define HID_PLAY_PAUSE			0x00CD          /* Play/Pause */
+#define HID_MUTE				0x00E2          /* Mute */
+#define HID_VOLUME_INCREMENT	0x00E9          /* Louder */
+#define HID_VOLUME_DECREMENT	0x00EA          /* Softer */
+#define HID_AL_KEYBOARD_LAYOUT	0x01AE          /* Toggle Onscreen Keyboard */
+#define HID_AL_SCREEN_SAVER		0x01B1          /* Picture Frame */
+#define HID_AC_SEARCH			0x0221          /* Spotlight */
+
+void iAP2GetHidStartParams ( uint8_t ** hidParam, int * length );
+void iAP2HidSendCommand (uint16_t cmd);
+
+#endif

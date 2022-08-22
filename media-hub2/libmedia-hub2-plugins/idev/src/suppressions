@@ -1,0 +1,29 @@
+{
+	<insert_a_suppression_name_here>
+		Memcheck:Leak
+		...
+		fun:libusb_init
+		...
+}
+{
+	<insert_a_suppression_name_here>
+		Memcheck:Leak
+		...
+		fun:libusb_hotplug_register_callback
+		...
+}
+{
+	<insert_a_suppression_name_here>
+		Memcheck:Leak
+		...
+		fun:libusb_submit_transfer
+		...
+}
+{
+	<insert_a_suppression_name_here>
+		Memcheck:Leak
+		...
+		fun:libusb_alloc_transfer
+		...
+}
+

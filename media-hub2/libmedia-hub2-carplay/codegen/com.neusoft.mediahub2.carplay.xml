@@ -1,0 +1,8 @@
+<node>
+  <interface name="com.neusoft.mediahub2.carplay">
+	<method name="test_string">
+      <arg name="uri" direction="in" type="s"/>
+      <arg name="result" direction="out" type="b"/>
+	</method>
+  </interface> 
+</node>
