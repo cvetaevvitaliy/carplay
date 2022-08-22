@@ -1,0 +1,13 @@
+﻿# Package Information for pkg-config
+
+prefix=@PREFIX@
+exec_prefix=@EXEC_PREFIX@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: libmedia-hub2-carplay-client
+Description: Neusoft media-hub v2.0 middle-ware carplay client
+Version: @VERSION@
+Requires: glib-2.0 gio-2.0 gobject-2.0
+Libs: -L\${libdir} -lmedia-hub2-carplay-client
+Cflags: -I\${includedir}
